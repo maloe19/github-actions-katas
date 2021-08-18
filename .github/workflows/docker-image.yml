@@ -1,0 +1,22 @@
+name: docker-image
+on: push
+jobs:
+  Build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload
+        uses: actions/upload-artifact@v2
+      - name: Download
+        uses: actions/download-artifact@v2
+        with:
+          username: ${{ env.docker_username }}
+          password: ${{ env.docker_password }}
+      - name: Run
+        run: ci/build-docker.sh
+        run: ci/psuh-docker.sh
+        with: export GIT_COMMIT="GA-$GITHUB_SHA"
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Test #03
+        run: ci/unit-test-app.sh #03
